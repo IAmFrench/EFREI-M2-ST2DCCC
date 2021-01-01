@@ -1,0 +1,80 @@
+version: '3.2'
+
+services:
+  shinken:
+    build: 
+      context: shinken/
+    environment: 
+      NAGIOSPLUGINSDIR: $NAGIOSPLUGINSDIR
+      LC_ALL: $LC_ALL
+      LANG: $LANG
+    ports:
+      - "80:8080"
+    volumes:
+      - type: bind
+        source: ./shinken/config/clients.cfg
+        target: /etc/shinken/hosts/localhost.cfg
+        read_only: true
+    networks:
+      main:
+        ipv4_address: "172.26.0.10"
+    stdin_open: true
+    tty: true
+    restart: always
+  client1:
+    build:
+      context: client/
+    volumes:
+      - type: bind
+        source: ./client/config/snmpd.conf
+        target: /etc/snmp/snmpd.conf
+        read_only: true
+    stdin_open: true
+    tty: true
+    networks:
+      main:
+        ipv4_address: "172.26.0.11"
+    links:
+      - shinken
+  client2:
+    build:
+      context: client/
+    volumes:
+      - type: bind
+        source: ./client/config/snmpd.conf
+        target: /etc/snmp/snmpd.conf
+        read_only: true
+    stdin_open: true
+    tty: true
+    networks:
+      main:
+        ipv4_address: "172.26.0.12"
+    links:
+      - shinken
+  client3:
+    build:
+      context: client/
+    volumes:
+      - type: bind
+        source: ./client/config/snmpd.conf
+        target: /etc/snmp/snmpd.conf
+        read_only: true
+    stdin_open: true
+    tty: true
+    networks:
+      main:
+        ipv4_address: "172.26.0.13"
+    ports: 
+      - "160"
+      - "161:161/udp"
+      - "162"
+    links:
+      - shinken
+
+networks:
+  main:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.26.0.0/24"
