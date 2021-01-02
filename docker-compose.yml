@@ -10,7 +10,7 @@ services:
     environment:
     - DEBUG=1
     - server.port=8080
-    ports: 
+    ports:
     - "8080"
 
   actor:
@@ -23,7 +23,8 @@ services:
       - "movie:movieService"
     environment:
     - DEBUG=1
-    - movieService=movieService:8080
+    - movieService=movieService:8080    
+    - server.port=80
     ports:
-      - "8080:8080"
+      - "80:80"
 

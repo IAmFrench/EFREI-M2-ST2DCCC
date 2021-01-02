@@ -45,7 +45,7 @@ public class Controller {
     @CircuitBreaker(name = SECOND_SERVICE, fallbackMethod = "fooFallBack")
     @GetMapping("/findAll")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> getAllMovie() throws ParseException, JsonProcessingException {
+    public ResponseEntity<JSONObject> getAllMovie() throws ParseException, JsonProcessingException {
        LOGGER.info("I'm trying to call ServiceOne");
        String responseAllMovies = restTemplate.getForObject("http://"+System.getenv("movieService")+"/movies",String.class);
 
@@ -58,19 +58,25 @@ public class Controller {
             actorService.bind(movie);
         }
 
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(movies.toString());
         LOGGER.info("ServiceOne has responded");
-        return new ResponseEntity<>(movies.toString(),HttpStatus.OK);
+        return new ResponseEntity<>(json,HttpStatus.OK);
     }
 
-    private ResponseEntity<String> fooFallBack(Exception e) throws JsonProcessingException {
+    private ResponseEntity<JSONObject> fooFallBack(Exception e) throws JsonProcessingException, ParseException {
         LOGGER.error("ServiceOne has not responded, I'm calling Fallback");
 
+        Movies movies = new Movies();
        Movie movie = new Movie(0,"FallBack Method", "C'est l'histoire de deux étudiants qui essayèrent d'implémenter un fallBack et apparemment cela a fonctioné ;D");
+        movies.add(movie);
        ActorService actorService = new ActorService();
        actorService.bind(movie);
 
+       JSONParser parser = new JSONParser();
+       JSONObject json = (JSONObject) parser.parse(movies.toString());
 
         LOGGER.error(e.getMessage());
-        return new ResponseEntity<>(movie.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(json, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

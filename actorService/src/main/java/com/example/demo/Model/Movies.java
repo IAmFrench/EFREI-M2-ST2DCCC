@@ -14,7 +14,7 @@ public class Movies implements Iterable<Movie>{
     public String toString() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(this.movies);
+            String json = objectMapper.writeValueAsString(this);
             return json;
         } catch (Exception e) {
             return "[]";
@@ -23,6 +23,10 @@ public class Movies implements Iterable<Movie>{
 
     public List<Movie> getMovies() {
         return movies;
+    }
+
+    public void add(Movie movie) {
+        this.movies.add(movie);
     }
 
     public void setMovies(List<Movie> movies) {
