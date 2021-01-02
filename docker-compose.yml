@@ -4,13 +4,14 @@ services:
   movie:
     build: 
       context: movieService/
-    ports:
-      - "8080"
     stdin_open: true
     tty: true
     restart: always
-    links:
-      - movie
+    environment:
+    - DEBUG=1
+    - server.port=8080
+    ports: 
+    - "8080"
 
   actor:
     build: 
@@ -18,7 +19,11 @@ services:
     stdin_open: true
     tty: true
     restart: always
+    links:
+      - "movie:movieService"
+    environment:
+    - DEBUG=1
+    - movieService=movieService:8080
+    ports:
+      - "8080:8080"
 
-networks: 
-  backend:
-  frontend:

@@ -47,7 +47,7 @@ public class Controller {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> getAllMovie() throws ParseException, JsonProcessingException {
        LOGGER.info("I'm trying to call ServiceOne");
-       String responseAllMovies = restTemplate.getForObject("http://localhost:8081/movies",String.class);
+       String responseAllMovies = restTemplate.getForObject("http://"+System.getenv("movieService")+"/movies",String.class);
 
         ActorService actorService = new ActorService();
         ObjectMapper mapper = new ObjectMapper();
@@ -65,7 +65,7 @@ public class Controller {
     private ResponseEntity<String> fooFallBack(Exception e) throws JsonProcessingException {
         LOGGER.error("ServiceOne has not responded, I'm calling Fallback");
 
-       Movie movie = new Movie(0,"FallBack Method", "C'est l'historie de deux étudiants qui essayèrent d'implémenter un fallBack et apparemment cela a fonctioné ;D");
+       Movie movie = new Movie(0,"FallBack Method", "C'est l'histoire de deux étudiants qui essayèrent d'implémenter un fallBack et apparemment cela a fonctioné ;D");
        ActorService actorService = new ActorService();
        actorService.bind(movie);
 
