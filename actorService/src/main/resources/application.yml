@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: actors-service
+  jackson:
+    default-property-inclusion: non_absent
+    deserialization:
+      adjust_dates_to_context_time_zone: false
+    serialization:
+      fail_on_empty_beans: false
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'

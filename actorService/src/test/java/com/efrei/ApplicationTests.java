@@ -1,13 +1,13 @@
-package com.example.demo;
+package com.efrei;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OtherMicroServiceApplicationTests {
+class ApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

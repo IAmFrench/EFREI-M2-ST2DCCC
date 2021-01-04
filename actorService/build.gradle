@@ -1,41 +1,40 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
+    id("java")
+    id("org.springframework.boot") version "2.4.1"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+version = "0.0.1-SNAPSHOT"
+
+
+tasks.compileJava {
+    options.compilerArgs.add("--enable-preview")
+}
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+    maven {
+        url = uri("https://repo.spring.io/milestone")
+    }
 }
 
-ext{
-	resilience4jVersion = '1.6.1'
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2020.0.0-M6")
+    }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-	implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
-	implementation 'com.squareup.okhttp3:logging-interceptor:3.14.7'
-	implementation  'com.googlecode.json-simple:json-simple:1.+'
-	compileOnly 'org.projectlombok:lombok:1.18.16'
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.0'
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.0'
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.0'
-	compile group: 'org.json', name: 'json', version: '20201115'
-	compile group: 'io.github.resilience4j', name: 'resilience4j-circuitbreaker', version: '1.6.1'
-	compile group: 'io.github.resilience4j', name: 'resilience4j-timelimiter', version: '1.6.1'
-	compile group: 'org.springframework.cloud', name: 'spring-cloud-circuitbreaker-resilience4j', version: '1.0.4.RELEASE'
-	compile("io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}")
-	compile('org.springframework.boot:spring-boot-starter-aop')
-}
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation  'com.googlecode.json-simple:json-simple:1.+'
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+    implementation("com.h2database:h2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("javax.xml.bind:jaxb-api")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 
-test {
-	useJUnitPlatform()
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
