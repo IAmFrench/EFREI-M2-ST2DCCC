@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.9'
 
 services:
   movie:
@@ -6,25 +6,41 @@ services:
       context: movieService/
     stdin_open: true
     tty: true
-    restart: always
     environment:
     - DEBUG=1
     - server.port=8080
     ports:
     - "8080"
+    deploy:
+      replicas: 1
 
   actor:
     build: 
       context: actorService/
     stdin_open: true
     tty: true
-    restart: always
-    links:
-      - "movie:movieService"
     environment:
     - DEBUG=1
-    - movieService=movieService:8080    
+    - movieService=movie:8080 # This is the DNS + port of the movie service
     - server.port=80
     ports:
-      - "80:80"
+      - "81:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
 
+  swagger:
+    image: swaggerapi/swagger-ui
+    stdin_open: true
+    tty: true
+    environment:
+      - SWAGGER_JSON=/tmp/swagger.yaml
+    volumes:
+      - ./swagger.yaml:/tmp/swagger.yaml
+    ports:
+      - "80:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip

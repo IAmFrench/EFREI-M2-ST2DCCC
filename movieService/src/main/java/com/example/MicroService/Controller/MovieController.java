@@ -30,8 +30,8 @@ public class MovieController {
 
     //Single Item
     @GetMapping("/movies/{id}")
-    Movie getMovieById(@PathVariable Long id) throws InterruptedException {
-        Thread.sleep(5 * 1000);
+    Movie getMovieById(@PathVariable Long id, @RequestParam(defaultValue = "0") String delay) throws InterruptedException {
+        Thread.sleep(Integer.parseInt(delay));
         return (Movie) repository.findById(id)
                 .orElseThrow(() -> new MovieNotFoundException(id));
     }

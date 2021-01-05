@@ -28,11 +28,11 @@ public record MovieService(CircuitBreakerFactory circuitBreakerFactory) {
         );
     }
 
-    public Movie getMovie(int id) {
+    public Movie getMovie(int id, int delay) {
         var restTemplate = new RestTemplate();
 
         return circuitBreakerFactory.create("getMovie").run(() -> restTemplate.exchange(
-                "http://" + System.getenv("movieService") + "/movies/"+ id, HttpMethod.GET, null,
+                "http://" + System.getenv("movieService") + "/movies/"+ id + "?delay=" + delay, HttpMethod.GET, null,
                 new ParameterizedTypeReference<Movie>() { }).getBody(),
             t -> {
                 LOGGER.error("getMovie call failed", t);
