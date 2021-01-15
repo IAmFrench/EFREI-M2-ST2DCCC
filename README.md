@@ -107,12 +107,3 @@ docker-compose down -v
 This command will stop and remove containers and networks from your compluter assigned to our project.
 
 ![Cleaning the application using the docker-compose down command](./artefacts/terminal-retire-application-using-docker-compose-down.png)
-
-
-## Explainations
-### Movie Service
-
-
-### Actor Service
-#### Circuit breaker and REST Client
-![Rest Client used in the actor service to fetch data from the movie service using a REST client embedded into a circuit breaker](./artefacts/movie-service-rest-client.png)
