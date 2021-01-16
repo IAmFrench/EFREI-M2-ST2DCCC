@@ -1,78 +1,226 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  description: "This interface allows you to play with our project. This project is composed of 2 micro-services: 1. The movie services, that list movies and 2. The actor service that act as a proxy to the movie service and add to the requested movie additionals infomations about actors that have played in a specific movie."
-  version: "1.0.0"
   title: "Swagger Movie Actor Service"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  description: >
+    This interface allows you to play with our project.
+    This project is composed of 2 micro-services
+    1. The movie service, that list movies and
+    2. The actor service that act as a proxy to the movie service and add to the requested movie additionals infomations about actors that have played in a specific movie."
+  version: "1.0.0"
 
-host: "localhost:81"
-basePath: "/"
+
+externalDocs:
+  url: https://github.com/IAmFrench/EFREI-M2-ST2DCCC
+  description: GitHub repository of the project
 
 tags:
-- name: "Movies"
-  description: "Everything about your movies"
-schemes:
-- "http"
+- name: Actor
+  description: >
+    Query from our actor service
+    
+    
+- name: Movie
+  description: >
+    Query from our movie service
+
 paths:
   /findAll:
+    servers:
+      - url: http://localhost:81
+        description: API for the Actor Service
     get:
-      tags:
-      - "Movies"
       summary: "List all movies"
-      description: ""
-      operationId: "getMovies"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      description: >
+        This method is used to get movies details, it return a list of movies
+      tags:
+      - Actor
+      operationId: "getMoviesFromActorService"
       responses:
         "200":
           description: "200 OK"
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/movie'
-          
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+        default:
+          description: Unexpected error
+
+
   /findOne/{movieId}:
+    servers:
+      - url: http://localhost:81
+        description: API for the Actor Service
     get:
-      tags:
-      - "Movies"
-      summary: "Display informations about a single movie"
+      summary: "Get a movie by his movieId"
       description: ""
-      operationId: "getMovie"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
+      tags:
+      - Actor
+      operationId: "getMovieFromActorService"
       parameters:
       - name: "movieId"
         in: "path"
         description: "ID of movie to display"
         required: true
-        type: "integer"
-        format: "int64"
+        schema:
+          type: integer
+          format: int64
       - name: "delay"
         in: "query"
-        type: "integer"
+        schema:
+          type: integer
+          format: int64
         description: "Delay to be added to the query, if this number is over 500 (ms) the actor service will fallback to a default response"
         required: false
       responses:
         "200":
           description: "200 OK"
-          schema:
-            $ref: '#/definitions/movie'
-definitions:
-  movie:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-      description:
-        type: "string"
-      actors:
-        type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/movie'
+        default:
+          description: Unexpected error
+                
+  /movies:
+    servers:
+      - url: http://localhost:82
+        description: API for the Movie Service
+    get:
+      summary: "List all movies"
+      description: >
+        This method is used to get movies details, it return a list of movies
+      tags:
+      - Movie
+      operationId: "getMoviesFromMovieService"
+      responses:
+        "200":
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+        default:
+          description: Unexpected error
+    post:
+      summary: "Add a movie to the movie service"
+      description: >
+        This method is used to get movies details, it return a list of movies
+      tags:
+      - Movie
+      operationId: "addMoviesFromMovieService"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/movie'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+        default:
+          description: Unexpected error          
+  /movies/{movieId}:
+    servers:
+      - url: http://localhost:82
+        description: API for the Movie Service
+    get:
+      summary: "Get a movie by his movieId"
+      description: >
+        This method is used to get a specific movies, it return a movies pbject
+      tags:
+      - Movie
+      operationId: "getMovieFromMovieService"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of movie to display"
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+        default:
+          description: Unexpected error
+    put:
+      summary: "Edit a movie by his movieId"
+      description: >
+        This method is used to edit a specific movies, it return a movies pbject
+      tags:
+      - Movie
+      operationId: "editMovieFromMovieService"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of movie to display"
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/movie'
+      responses:
+        "201":
+          description: Created
+        default:
+          description: Unexpected error
+    delete:
+      summary: "Delete a movie by his movieId"
+      description: >
+        This method is used to get a specific movies, it return a movies pbject
+      tags:
+      - Movie
+      operationId: "deleteMovieFromMovieService"
+      parameters:
+      - name: "movieId"
+        in: "path"
+        description: "ID of movie to display"
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/movie'
+
+components:
+  schemas:
+    movie:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        actors:
+          type: "string"

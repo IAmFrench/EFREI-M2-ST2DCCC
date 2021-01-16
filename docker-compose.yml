@@ -10,7 +10,7 @@ services:
     - DEBUG=1
     - server.port=8080
     ports:
-    - "8080"
+    - "82:8080"
     deploy:
       replicas: 1
 
