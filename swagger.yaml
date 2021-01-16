@@ -237,3 +237,10 @@ components:
           type: "string"
         actors:
           type: "string"
+      example:
+        id: 0111161
+        name: The Shawshank Redemption
+        description: >
+         Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.
+        actors: >
+          Tim Robbins, Morgan Freeman, Bob Gunton
