@@ -66,11 +66,13 @@ paths:
         schema:
           type: integer
           format: int64
+        example: 2
       - name: "delay"
         in: "query"
         schema:
           type: integer
           format: int64
+        example: 600
         description: "Delay to be added to the query, if this number is over 500 (ms) the actor service will fallback to a default response"
         required: false
       responses:
@@ -118,6 +120,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/movie'
+            example:
+              name: Soul
+              description: >
+                A musician who has lost his passion for music is transported out of his body and must find his way back with the help of an infant soul learning about herself.
       responses:
         "201":
           description: Created
@@ -148,6 +154,7 @@ paths:
         schema:
           type: integer
           format: int64
+        example: 2
       responses:
         "200":
           description: "200 OK"
@@ -174,15 +181,20 @@ paths:
         schema:
           type: integer
           format: int64
+        example: 1
       requestBody:
         required: false
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/movie'
+            example:
+              description: >
+                The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.
+              
       responses:
-        "201":
-          description: Created
+        "204":
+          description: Updated
         default:
           description: Unexpected error
     delete:
@@ -200,6 +212,7 @@ paths:
         schema:
           type: integer
           format: int64
+        example: 3
       responses:
         "200":
           description: "200 OK"
