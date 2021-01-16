@@ -1,43 +1,37 @@
 openapi: 3.0.0
 info:
-  title: "Swagger Movie Actor Service"
+  title: Swagger Movie & Actor Service
   description: >
     This interface allows you to play with our project.
     This project is composed of 2 micro-services
     1. The movie service, that list movies and
-    2. The actor service that act as a proxy to the movie service and add to the requested movie additionals infomations about actors that have played in a specific movie."
+    2. The actor service that act as a proxy to the movie service and add to the requested movie additionals infomations about actors that have played in a specific movie.
   version: "1.0.0"
-
-
 externalDocs:
   url: https://github.com/IAmFrench/EFREI-M2-ST2DCCC
-  description: GitHub repository of the project
-
+  description: External documentation available on GitHub
 tags:
 - name: Actor
   description: >
     Query from our actor service
-    
-    
 - name: Movie
   description: >
     Query from our movie service
-
 paths:
   /findAll:
     servers:
       - url: http://localhost:81
         description: API for the Actor Service
     get:
-      summary: "List all movies"
+      summary: List all movies
       description: >
         This method is used to get movies details, it return a list of movies
       tags:
       - Actor
-      operationId: "getMoviesFromActorService"
+      operationId: getMoviesFromActorService
       responses:
-        "200":
-          description: "200 OK"
+        '200':
+          description: OK
           content:
             application/json:
               schema:
@@ -53,52 +47,55 @@ paths:
       - url: http://localhost:81
         description: API for the Actor Service
     get:
-      summary: "Get a movie by his movieId"
-      description: ""
+      summary: Get a movie by his movieId
+      description: >
+        This method is used to get a specific movie, it return a movie object
       tags:
       - Actor
-      operationId: "getMovieFromActorService"
+      operationId: getMovieFromActorService
       parameters:
-      - name: "movieId"
-        in: "path"
-        description: "ID of movie to display"
+      - name: movieId
+        in: path
+        description: ID of movie to display
         required: true
         schema:
           type: integer
           format: int64
         example: 2
-      - name: "delay"
-        in: "query"
+      - name: delay
+        in: query
         schema:
           type: integer
           format: int64
         example: 600
-        description: "Delay to be added to the query, if this number is over 500 (ms) the actor service will fallback to a default response"
+        description: >
+          Delay to be added to the query, if this number is over 500 (ms) the actor service will fallback to a default response
         required: false
       responses:
-        "200":
-          description: "200 OK"
+        '200':
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/movie'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           description: Unexpected error
-                
   /movies:
     servers:
       - url: http://localhost:82
         description: API for the Movie Service
     get:
-      summary: "List all movies"
+      summary: List all movies
       description: >
         This method is used to get movies details, it return a list of movies
       tags:
       - Movie
-      operationId: "getMoviesFromMovieService"
+      operationId: getMoviesFromMovieService
       responses:
-        "200":
-          description: "200 OK"
+        '200':
+          description: OK
           content:
             application/json:
               schema:
@@ -108,12 +105,12 @@ paths:
         default:
           description: Unexpected error
     post:
-      summary: "Add a movie to the movie service"
+      summary: Add a movie to the movie service
       description: >
         This method is used to get movies details, it return a list of movies
       tags:
       - Movie
-      operationId: "addMoviesFromMovieService"
+      operationId: addMoviesFromMovieService
       requestBody:
         required: true
         content:
@@ -125,14 +122,20 @@ paths:
               description: >
                 A musician who has lost his passion for music is transported out of his body and must find his way back with the help of an infant soul learning about herself.
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/movie'
+                $ref: '#/components/schemas/movie'
+          links:
+            GetMovieByMovieId:
+              operationId: getMovieFromMovieService
+              parameters:
+                movieId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `movieId` parameter in `GET /movies/{userId}`.
         default:
           description: Unexpected error          
   /movies/{movieId}:
@@ -140,43 +143,45 @@ paths:
       - url: http://localhost:82
         description: API for the Movie Service
     get:
-      summary: "Get a movie by his movieId"
+      summary: Get a movie by his movieId
       description: >
-        This method is used to get a specific movies, it return a movies pbject
+        This method is used to get a specific movie, it return a movie object
       tags:
       - Movie
-      operationId: "getMovieFromMovieService"
+      operationId: getMovieFromMovieService
       parameters:
-      - name: "movieId"
-        in: "path"
-        description: "ID of movie to display"
+      - name: movieId
+        in: path
+        description: ID of movie to display
         required: true
         schema:
           type: integer
           format: int64
         example: 2
       responses:
-        "200":
-          description: "200 OK"
+        '200':
+          description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/movie'
+        '404':
+          $ref: '#/components/responses/NotFound'
         default:
           description: Unexpected error
     put:
-      summary: "Edit a movie by his movieId"
+      summary: Edit a movie by his movieId
       description: >
         This method is used to edit a specific movies, it return a movies pbject
       tags:
       - Movie
-      operationId: "editMovieFromMovieService"
+      operationId: editMovieFromMovieService
       parameters:
-      - name: "movieId"
-        in: "path"
-        description: "ID of movie to display"
+      - name: movieId
+        in: path
+        description: ID of movie to display
         required: true
         schema:
           type: integer
@@ -191,52 +196,44 @@ paths:
             example:
               description: >
                 The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.
-              
       responses:
-        "204":
+        '204':
           description: Updated
         default:
           description: Unexpected error
     delete:
-      summary: "Delete a movie by his movieId"
+      summary: Delete a movie by his movieId
       description: >
         This method is used to get a specific movies, it return a movies pbject
       tags:
       - Movie
-      operationId: "deleteMovieFromMovieService"
+      operationId: deleteMovieFromMovieService
       parameters:
-      - name: "movieId"
-        in: "path"
-        description: "ID of movie to display"
+      - name: movieId
+        in: path
+        description: ID of movie to display
         required: true
         schema:
           type: integer
           format: int64
         example: 3
       responses:
-        "200":
-          description: "200 OK"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/movie'
-
+        '204':
+          description: The resource was deleted successfully.
 components:
   schemas:
     movie:
-      type: "object"
+      type: object
       properties:
         id:
-          type: "integer"
-          format: "int64"
+          type: integer
+          format: int64
         name:
-          type: "string"
+          type: string
         description:
-          type: "string"
+          type: string
         actors:
-          type: "string"
+          type: string
       example:
         id: 0111161
         name: The Shawshank Redemption
@@ -244,3 +241,23 @@ components:
          Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.
         actors: >
           Tim Robbins, Morgan Freeman, Bob Gunton
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+      example:
+        code: 404
+        message: Not Found
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
