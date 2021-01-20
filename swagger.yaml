@@ -157,7 +157,7 @@ paths:
         schema:
           type: integer
           format: int64
-        example: 2
+        example: 5
       responses:
         '200':
           description: OK
@@ -186,7 +186,7 @@ paths:
         schema:
           type: integer
           format: int64
-        example: 1
+        example: 5
       requestBody:
         required: false
         content:

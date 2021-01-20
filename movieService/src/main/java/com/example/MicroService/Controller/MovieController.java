@@ -42,8 +42,12 @@ public class MovieController {
 
         return repository.findById(id)
                 .map(movie -> {
-                    movie.setName(newMovie.getName());
-                    movie.setDescription(newMovie.getDescription());
+                    if (newMovie.getName() != null) {
+                        movie.setName(newMovie.getName());
+                    }
+                    if (newMovie.getDescription() != null) {
+                        movie.setDescription(newMovie.getDescription());
+                    }
                     return repository.save(movie);
                 })
                 .orElseGet(() -> {
