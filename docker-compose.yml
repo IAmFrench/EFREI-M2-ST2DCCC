@@ -4,6 +4,7 @@ services:
   movie:
     build: 
       context: movieService/
+    image: ghcr.io/iamfrench/efrei-m2-st2dccc_movie
     stdin_open: true
     tty: true
     environment:
@@ -17,6 +18,7 @@ services:
   actor:
     build: 
       context: actorService/
+    image: ghcr.io/iamfrench/efrei-m2-st2dccc_actor
     stdin_open: true
     tty: true
     environment:

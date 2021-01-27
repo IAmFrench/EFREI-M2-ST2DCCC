@@ -6,6 +6,8 @@ This repository contain the final project (that includes labs 1 to 3).
 
 Instructions are available in `.pdf` files at the root of the directory.
 
+![Application Diagram](./artefacts/app-diagram.png)
+
 ## Prerequisite
 This project runs on docker.
 
@@ -21,8 +23,23 @@ And that's it !
 ## Run
 Now you can run the project. To do so, you will have to open a terminal and execute the following command :
 
+*Optionnal* You can download pre-buid images from the GitHub Container Registry using the following command:
+
+```bash
+docker pull ghcr.io/iamfrench/efrei-m2-st2dccc_movie
+docker pull ghcr.io/iamfrench/efrei-m2-st2dccc_actor
+```
+
+Then you can start the application using the following command:
+
 ```bash
 docker-compose up -d
+```
+
+> Hint: To speed up the build process you can use the following command:
+
+```bash
+docker-compose build --parallel
 ```
 
 This command will read the [`docker-compose.yml`](./docker-compose.yml) file and deploy the application on you local computer.
@@ -46,6 +63,40 @@ The interface that is displayed is the default Swagger UI web Client. This web c
 
 ![Open the Swagger UI web client using a basic web browser](./artefacts/chrome-open-swagger-web-client.png)
 
+### Available endpoints and methods
+Because we have two services running we have choose to expose them to two differents ports as displayed in the solution diagram.
+The port `81` is used by the actor service and the port `82` is used by the movie service.
+
+In order to use those endpoints on differents ports in Swagger UI we have overwritten the default host (lines `4` and `9`) in the [`docker-compose.yml`](./docker-compose.yml) file:
+
+![Override the default server](./artefacts/swagger-yaml-custom-servers.png)
+
+#### Actor Service (on port 81)
+
+##### `GET` finAll
+> Returl all movies stored in the movie service with actors
+
+##### `GET` findOne/`{movieId}`
+> Returl a movie from the movie service, with actors by `movieId`
+
+
+#### Movie Service (on port 82)
+
+##### `GET` movies
+> Returl all movies
+
+##### `POST` movies
+> Add a new movie to the movie service
+
+##### `GET` movies/`{movieId}`
+> Return a single movie by `movieId` 
+
+##### `PUT` movies/`{movieId}`
+> Edit a movie by `movieId` 
+
+##### `DELETE` movies/`{movieId}`
+> Delete a movie by `movieId` 
+
 ### Test the circuit breaker
 The circuit breaker is implemented in the actor service. It is used when this service call the movie service.
 
@@ -66,9 +117,10 @@ And here is the response:
 
 ![REST response from the actor service when the movie service is down](./artefacts/chrome-swagger-ui-movie-service-down-response.png)
 
-As expected, the movie service is unavailable, therefore the fallback method have been call and the response modified accordingly.
+As expected, the movie service is unavailable, therefore the fallback method have been called and the response modified accordingly.
 
 Here is the code responsible for that (in the actor service):
+
 ![REST Client of the actor service embedded into a circuit breaker](./artefacts/actor-service-rest-client-with-fallback.png)
 
 
