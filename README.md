@@ -2,7 +2,7 @@
 Cloud Integration (M2, M2-APP-LSI, M2-APP-RI, M2-PRO - 2021S9)
 
 ## Overview
-This repository contain the final project (that includes labs 1 to 3).
+This repository contains the final project (that includes labs 1 to 3).
 
 Instructions are available in `.pdf` files at the root of the directory.
 
@@ -23,7 +23,7 @@ And that's it !
 ## Run
 Now you can run the project. To do so, you will have to open a terminal and execute the following command :
 
-*Optionnal* You can download pre-buid images from the GitHub Container Registry using the following command:
+*Optionnal* You can download pre-built images from the GitHub Container Registry using the following command:
 
 ```bash
 docker pull ghcr.io/iamfrench/efrei-m2-st2dccc_movie
@@ -36,13 +36,13 @@ Then you can start the application using the following command:
 docker-compose up -d
 ```
 
-> Hint: To speed up the build process you can use the following command:
+> Hint: To speed up the build process, you can use the following command:
 
 ```bash
 docker-compose build --parallel
 ```
 
-This command will read the [`docker-compose.yml`](./docker-compose.yml) file and deploy the application on you local computer.
+This command will read the [`docker-compose.yml`](./docker-compose.yml) file and deploy the application on your local computer.
 
 ![Deploy the application is running using docker-compose up commands](./artefacts/terminal-deploy-the-application-docker-compose-up.gif)
 
@@ -59,31 +59,31 @@ Now that you have installed, and run the application, it's time to play with the
 
 Open you web browser to [`http://localhost`](http://localhost)
 
-The interface that is displayed is the default Swagger UI web Client. This web client have been feed with a definition file ([`swagger.yaml`](./swagger.yaml)) that describe our APIs.
+The interface that is displayed is the default Swagger UI web Client. This web client has been fed with a definition file ([`swagger.yaml`](./swagger.yaml)) that describe our APIs.
 
 ![Open the Swagger UI web client using a basic web browser](./artefacts/chrome-open-swagger-web-client.png)
 
 ### Available endpoints and methods
-Because we have two services running we have choose to expose them to two differents ports as displayed in the solution diagram.
+Because we have two services running we have chosen to expose them to two different ports as displayed in the solution diagram.
 The port `81` is used by the actor service and the port `82` is used by the movie service.
 
-In order to use those endpoints on differents ports in Swagger UI we have overwritten the default host (lines `4` and `9`) in the [`docker-compose.yml`](./docker-compose.yml) file:
+In order to use those endpoints on different ports in Swagger UI we have overwritten the default host (lines `4` and `9`) in the [`docker-compose.yml`](./docker-compose.yml) file:
 
 ![Override the default server](./artefacts/swagger-yaml-custom-servers.png)
 
 #### Actor Service (on port 81)
 
 ##### `GET` finAll
-> Returl all movies stored in the movie service with actors
+> Return all movies stored in the movie service with actors
 
 ##### `GET` findOne/`{movieId}`
-> Returl a movie from the movie service, with actors by `movieId`
+> Return a movie from the movie service, with actors by `movieId`
 
 
 #### Movie Service (on port 82)
 
 ##### `GET` movies
-> Returl all movies
+> Return all movies
 
 ##### `POST` movies
 > Add a new movie to the movie service
@@ -103,7 +103,7 @@ The circuit breaker is implemented in the actor service. It is used when this se
 #### Service is unavailable (no response)
 If the requested service is unavailable a fallback method is implemented to prevent a cascade failure.
 
-To create a failure, you just need to kill the container running the movie service. To do so we will use the Docker Desktop Dashboard, a GUI for Docker:
+To create a failure, you just need to kill the container running the movie service. To do so, we will use the Docker Desktop Dashboard, a GUI for Docker:
 
 ![Stop the container responsible for running the movie service](./artefacts/docker-desktop-dashboard-stop-movie-container.png)
 
@@ -125,25 +125,27 @@ Here is the code responsible for that (in the actor service):
 
 
 #### Service is slow or degraded (timelimit) 
-If a request is taking too much time, a fallback method is taking care of providing a response to ensuire a continuity of service.
+If a request is taking too much time, a fallback method is taking care of providing a response to ensure a continuity of service.
 
-To simulate this delay we have implemented an argument (passed as a query parameter) for the `GET {movie-service}/movies/{id}` route in the movie service:
+To simulate this delay, we have implemented an argument (passed as a query parameter) for the `GET {movie-service}/movies/{id}` route in the movie service:
 
 ![Delay added to the query in the Movie Service using a pause statement](./artefacts/movie-service-delay.png)
 
-And thanks to the Swagger GUI we can test this:
+And thanks to the Swagger UI we can test this:
 
 ![Swagger UI query that induce a delay of 600ms](./artefacts/chrome-swagger-ui-delay-query.png)
 
-This produce the following response:
+This produces the following response:
+
 ![Swagger UI response after a query inducing a delay of 600ms](./artefacts/chrome-swagger-ui-delay-response.png)
 
-As expected, a fallback method have been triggered.
+As expected, a fallback method has been triggered.
 
 Here is the code responsible for that (in the actor service):
+
 ![REST Client of the actor service embedded into a circuit breaker](./artefacts/actor-service-rest-client-with-fallback.png)
 
-The timelimit have been set in the circuit breaker config:
+The time limit has been set in the circuit breaker config:
 
 ![Circuit breaker config file](./artefacts/actor-service-circuit-breaker-config.png)
 
@@ -156,6 +158,6 @@ To do so, open a terminal and type the following command:
 docker-compose down -v
 ```
 
-This command will stop and remove containers and networks from your compluter assigned to our project.
+This command will stop and remove containers and networks from your computer assigned to our project.
 
 ![Cleaning the application using the docker-compose down command](./artefacts/terminal-retire-application-using-docker-compose-down.png)
